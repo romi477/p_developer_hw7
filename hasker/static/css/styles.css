@@ -1,0 +1,75 @@
+
+.btn-light {
+    border: 1px solid #999;
+    margin-left: 14px;
+}
+
+.btn-success {
+    background-color: MediumSeaGreen;
+    opacity: 0.8;
+}
+
+.list-group {
+    color: MediumSeaGreen;
+}
+
+.card {
+    margin: 25px;
+}
+
+.pagination {
+    margin-left: auto;
+    margin-right: auto;
+    width: 30em;
+}
+
+.pagination a {
+    color: grey;
+}
+
+iframe {
+    display: block;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+
+.breadcrumb {
+    padding: 1px 16px;
+}
+
+.breadcrumb-item a {
+    color: MediumSeaGreen;
+}
+
+.list-group-item a {
+    color: MediumSeaGreen;
+}
+
+.form-group {
+    width: 500px;
+    margin: auto;
+}
+
+.btn-outline-success {
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.card-header a {
+    color: MediumSeaGreen;
+}
+
+.card-body a {
+    color: MediumSeaGreen;
+}
+
+.btn-block {
+    width: 500px;
+    margin-top: 16px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-outline-info {
+    margin-left: 20px;
+}
