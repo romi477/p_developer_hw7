@@ -1,0 +1,51 @@
+{% extends 'authorization/base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+<script>
+  $(document).ready(function() {
+    $('#id_email').on('blur' , validate);
+    function validate() {
+      var email = $('#id_email').val();
+      $.ajax({
+        method : 'GET',
+        url: 'validate-email/',
+        data: {
+          'email': email
+        },
+        dataType: 'json',
+        success: function(data) {
+          console.log(data);
+          if (data.is_taken) {
+            var alert_danger = $('<div class="alert alert-danger" id="error-email" role="alert"></div>')
+                                .text(data.is_taken);
+            $('#row1').prepend(alert_danger);
+            $('#btn1').attr('disabled' , 'disabled');
+          }
+          else if (data.ok) {
+            $('#error-email').hide();
+            $('#btn1').removeAttr('disabled');
+          }
+        },
+        error: function(data) {
+          console.log(data);
+        }
+      })
+    }
+  })
+</script>
+
+    <h3 style="text-align: center; color: MediumSeaGreen; margin-top: 16px;">Registration:</h3>
+
+    <form action="{% url 'registration' %}" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+
+        <div class="col text-center" id="row1">
+            <input type ="submit" class="btn btn-outline-success" id="btn1" value ="registration"/>
+        </div>
+    </form>
+
+{% endblock %}

@@ -7,5 +7,5 @@ urlpatterns = [
     path('registration/validate-email/', validate_email, name='validate_email'),
     path('login/', LoginFormView.as_view(), name='login'),
     path('logout/', LogOutFormView.as_view(), name='logout'),
-
+    # path('editprofile/', EditUserForm.as_view(), name='edit_profile')
 ]

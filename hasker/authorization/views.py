@@ -1,25 +1,17 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.models import User
 from django.views import View
-from django.views.generic.edit import FormView
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .forms import UserCreateForm
-
 from django.http import JsonResponse
-
-
-
-
-
-
-
-
+from django.shortcuts import redirect
+from django.contrib.auth.models import User
+from django.views.generic.edit import FormView
+from django.contrib.auth.forms import AuthenticationForm, UserChangeForm
+from django.contrib.auth import login, logout, authenticate
 
 
 class RegistrationFormView(FormView):
     form_class = UserCreateForm
-    success_url = '/stereolife/'
+    success_url = '/hasker/'
+    # success_url = "{% url 'index_view' %}"
     template_name = 'authorization/registration.html'
 
     def form_valid(self, form):
@@ -30,6 +22,7 @@ class RegistrationFormView(FormView):
 
     def form_invalid(self, form):
         return super(RegistrationFormView, self).form_invalid(form)
+
 
 def validate_email(request):
     if request.method == 'GET':
@@ -47,7 +40,7 @@ def validate_email(request):
 class LoginFormView(FormView):
     form_class = AuthenticationForm
     template_name = 'authorization/login.html'
-    success_url = '/stereolife/'
+    success_url = '/hasker/'
 
     def form_valid(self, form):
         self.user = form.get_user()
@@ -62,4 +55,9 @@ class LoginFormView(FormView):
 class LogOutFormView(View):
     def get(self, request):
         logout(request)
-        return redirect('index')
+        return redirect('index_view')
+
+
+class EditUserForm(UserChangeForm):
+    
+    pass

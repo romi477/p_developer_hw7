@@ -27,28 +27,11 @@
     color: grey;
 }
 
-iframe {
-    display: block;
-    margin: 0 auto;
-    margin-top: 50px;
-}
-
-.breadcrumb {
-    padding: 1px 16px;
-}
-
-.breadcrumb-item a {
-    color: MediumSeaGreen;
-}
 
 .list-group-item a {
     color: MediumSeaGreen;
 }
 
-.form-group {
-    width: 500px;
-    margin: auto;
-}
 
 .btn-outline-success {
     margin-top: 16px;

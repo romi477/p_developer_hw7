@@ -1,0 +1,20 @@
+{% extends 'authorization/base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+      <h3 style="text-align: center; color: MediumSeaGreen; margin-top: 16px;">Authorization:</h3>
+
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+
+            {{ form|crispy }}
+
+            <div class="col text-center">
+                <input type ="submit" class="btn btn-outline-success" value ="sign in"/>
+            </div>
+        </form>
+
+
+{% endblock %}

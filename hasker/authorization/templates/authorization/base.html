@@ -4,7 +4,7 @@
     {% if user.is_authenticated %}
         <script>
             alert('{{ user|upper }} is already authenticated...');
-            window.location.href = {% url 'index' %};
+            window.location.href = {% url 'index_view' %};
         </script>
     {% else %}
         <div class="dropdown">
@@ -12,9 +12,9 @@
                 authorize
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="{% url 'login' %}">sign in</a>
+                <a class="dropdown-item" href="{% url 'login' %}">log in</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="{% url 'registration' %}">sign up</a>
+                <a class="dropdown-item" href="{% url 'registration' %}">registration</a>
             </div>
         </div>
     {% endif %}
