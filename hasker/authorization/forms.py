@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 from django import forms
+from django.apps import apps
+
 
 
 
@@ -8,8 +9,8 @@ class UserCreateForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
     class Meta:
-        model = User
-        fields = ('username', 'email')
+        model = apps.get_model('forum', 'MyUser')
+        fields = ('username', 'email', 'avatar')
 
         def save(self, commit=True):
             user = super(UserCreateForm, self).save(commit=False)
@@ -17,3 +18,4 @@ class UserCreateForm(UserCreationForm):
             if commit:
                 user.save()
             return user
+

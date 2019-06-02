@@ -33,6 +33,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'hasker.urls'
 
+AUTH_USER_MODEL = 'forum.MyUser'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

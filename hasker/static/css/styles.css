@@ -32,6 +32,10 @@
     color: MediumSeaGreen;
 }
 
+.form-group {
+    width: 500px;
+    margin: auto;
+}
 
 .btn-outline-success {
     margin-top: 16px;
