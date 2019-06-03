@@ -33,7 +33,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'hasker.urls'
 
-AUTH_USER_MODEL = 'forum.MyUser'
+# AUTH_USER_MODEL = 'forum.MyUser'
 
 TEMPLATES = [
     {
@@ -91,8 +91,10 @@ USE_TZ = True
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'files', 'media')
 
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'files', 'static')
 ]

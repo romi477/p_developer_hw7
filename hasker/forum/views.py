@@ -1,6 +1,5 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
-from .models import MyUser
 from django.views.generic import DetailView
 from django.contrib.auth.models import User
 from django.views import View
@@ -15,9 +14,10 @@ def index(request):
 
 
 class UserInfo(View):
-    def get(self, request, username):
-        person = get_object_or_404(MyUser, username=username)
-        return render(request, 'forum/user_info.html', {'user': person})
+    pass
+    # def get(self, request, username):
+    #     person = get_object_or_404(MyUser, username=username)
+    #     return render(request, 'forum/user_info.html', {'user': person})
 
 
 def users(request):

@@ -11,7 +11,6 @@ from django.contrib.auth import login, logout, authenticate
 class RegistrationFormView(FormView):
     form_class = UserCreateForm
     success_url = '/hasker/'
-    # success_url = "{% url 'index_view' %}"
     template_name = 'authorization/registration.html'
 
     def form_valid(self, form):
@@ -58,6 +57,6 @@ class LogOutFormView(View):
         return redirect('index_view')
 
 
+
 class EditUserForm(UserChangeForm):
-    
     pass
