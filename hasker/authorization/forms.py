@@ -1,15 +1,32 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
+from .models import Test
 
+from django.forms import ModelForm
+
+
+class TestForm(ModelForm):
+    class Meta:
+        model = Test
+        fields = ('person', 'avatar')
 
 
 class UserCreateForm(UserCreationForm):
-    avatar = forms.ImageField(required=False)
+    # email = forms.EmailField(required=True)
+    avatar = forms.ImageField(required=True)
 
     class Meta:
         model = User
         fields = ('username', 'email', 'avatar', 'password1', 'password2',)
+
+    # def save(self, commit=True):
+    #     user = super(UserCreateForm, self).save(commit=False)
+    #     # user.email = self.cleaned_data['email']
+    #     user.profile.avatar = self.cleaned_data['avatar']
+    #     if commit:
+    #         user.save()
+    #     return user
 
     # def clean_email(self):
     #     email = self.cleaned_data.get('email')
@@ -19,12 +36,7 @@ class UserCreateForm(UserCreationForm):
     #         return email
     #     raise forms.ValidationError("This email address is already in use.")
     #
-    # def save(self, commit=True):
-    #     user = super(UserCreateForm, self).save(commit=False)
-    #     user.avatar = self.cleaned_data['avatar']
-    #     if commit:
-    #         user.save()
-    #     return user
+    
 
 
 
