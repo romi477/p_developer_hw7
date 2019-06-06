@@ -4,11 +4,13 @@ from .forms import TestForm
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
+from .models import Person
 from django.views.generic.edit import FormView
 from django.contrib.auth.forms import AuthenticationForm, UserChangeForm
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.views.generic import DetailView
 
 
 
@@ -63,7 +65,7 @@ def signup(request):
 # def validate_email(request):
 #     if request.method == 'GET':
 #         email = request.GET.get('email')
-#         is_taken = User.objects.filter(email=email).exists()
+#         is_taken = Person.objects.filter(email=email).exists()
 #         if is_taken:
 #             message = 'This email address already exists!!!'
 #             data = {'is_taken': message}
@@ -95,5 +97,13 @@ class LogOutFormView(View):
 
 
 
-class EditUserForm(UserChangeForm):
-    pass
+def user_detail(request, nick):
+    
+    user = Person.objects.get(username=nick)
+    
+    # model = Person
+    template_name = 'authorization/user_profile.html'
+    context_object_name = 'user_profile'
+    
+    return render(request, template_name, {context_object_name: user})
+    

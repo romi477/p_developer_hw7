@@ -1,12 +1,12 @@
-{% extends 'forum/base.html' %}
+{% extends 'authorization/base_auth.html' %}
 
 
 {% block content %}
 
     <div class="card text-center">
         <div class="card-header">
-            <strong>{{ user }}</strong>
-            <strong>{{ user.avatar }}</strong>
+            <strong>{{ user_profile.username }}</strong>
+
 
         </div>
 

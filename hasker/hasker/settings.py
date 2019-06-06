@@ -33,7 +33,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'hasker.urls'
 
-# AUTH_USER_MODEL = 'forum.MyUser'
+AUTH_USER_MODEL = 'authorization.Person'
 
 TEMPLATES = [
     {
