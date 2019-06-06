@@ -1,8 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 from django import forms
-from .models import Person, UserProfile, Test
-
+from .models import Person, PersonalProfile, Test
 from django.forms import ModelForm
 
 
@@ -12,7 +10,7 @@ class TestForm(ModelForm):
         fields = ('person', 'avatar')
 
 
-class UserCreateForm(UserCreationForm):
+class PersonCreateForm(UserCreationForm):
     # email = forms.EmailField(required=True)
     avatar = forms.ImageField(required=True)
 
@@ -32,7 +30,7 @@ class UserCreateForm(UserCreationForm):
 class UserProfileForm(forms.ModelForm):
     
     class Meta:
-        model = UserProfile
+        model = PersonalProfile
         fields = '__all__'
         # fields = ('username', 'email', 'avatar')
         

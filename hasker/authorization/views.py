@@ -1,15 +1,12 @@
 from django.views import View
-from .forms import UserCreateForm
-from .forms import TestForm
-from django.http import JsonResponse
+from .forms import PersonCreateForm, TestForm
 from django.shortcuts import redirect
-from django.contrib.auth.models import User
-from .models import Person
 from django.views.generic.edit import FormView
-from django.contrib.auth.forms import AuthenticationForm, UserChangeForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import render
 from django.http import HttpResponse
+from .models import Person
 from django.views.generic import DetailView
 
 
@@ -30,7 +27,7 @@ class CreateTest(View):
 
 
 class RegistrationFormView(FormView):
-    form_class = UserCreateForm
+    form_class = PersonCreateForm
     success_url = '/hasker/'
     template_name = 'authorization/registration.html'
 
@@ -47,7 +44,7 @@ class RegistrationFormView(FormView):
 
 def signup(request):
     if request.method == "POST":
-        form = UserCreateForm(request.POST, request.FILES)
+        form = PersonCreateForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
             user.refresh_from_db()
@@ -59,20 +56,8 @@ def signup(request):
             return redirect("index_view")
     
     else:
-        form = UserCreateForm()
+        form = PersonCreateForm()
     return render(request, 'authorization/registration.html', {'form': form})
-
-# def validate_email(request):
-#     if request.method == 'GET':
-#         email = request.GET.get('email')
-#         is_taken = Person.objects.filter(email=email).exists()
-#         if is_taken:
-#             message = 'This email address already exists!!!'
-#             data = {'is_taken': message}
-#             return JsonResponse(data)
-#         else:
-#             return JsonResponse({'ok': True})
-
 
 
 class LoginFormView(FormView):
@@ -97,13 +82,11 @@ class LogOutFormView(View):
 
 
 
-def user_detail(request, nick):
+def person_detail(request, nick):
     
     user = Person.objects.get(username=nick)
-    
-    # model = Person
-    template_name = 'authorization/user_profile.html'
-    context_object_name = 'user_profile'
+    template_name = 'authorization/person_profile.html'
+    context_object_name = 'person_profile'
     
     return render(request, template_name, {context_object_name: user})
     
