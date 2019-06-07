@@ -10,27 +10,33 @@ class TestForm(ModelForm):
         fields = ('person', 'avatar')
 
 
-class PersonCreateForm(UserCreationForm):
-    # email = forms.EmailField(required=True)
-    avatar = forms.ImageField(required=True)
+class PersonForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    avatar = forms.ImageField(required=False)
 
     class Meta:
         model = Person
         fields = ('username', 'email', 'avatar', 'password1', 'password2',)
 
-    # def save(self, commit=True):
-    #     user = super(UserCreateForm, self).save(commit=False)
-    #     # user.email = self.cleaned_data['email']
-    #     user.profile.avatar = self.cleaned_data['avatar']
-    #     if commit:
-    #         user.save()
-    #     return user
+    def save(self, commit=True):
+        user = super(PersonForm, self).save(commit=False)
+        user.email = self.cleaned_data['email']
+        user.personalprofile.avatar = self.cleaned_data['avatar']
+        if commit:
+            user.save()
+        return user
 
-   
-class UserProfileForm(forms.ModelForm):
-    
+
+class PersonalProfileForm(forms.ModelForm):
+    email = forms.EmailField(required=True)
+
     class Meta:
         model = PersonalProfile
-        fields = '__all__'
-        # fields = ('username', 'email', 'avatar')
-        
+        fields = ('email', 'avatar')
+
+    # def save(self, commit=True):
+    #     profile = super(PersonProfileForm, self).save(commit=False)
+    #     profile.person.email = self.cleaned_data['email']
+    #     if commit:
+    #         profile.save()
+    #     return profile

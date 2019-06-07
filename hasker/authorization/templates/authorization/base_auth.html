@@ -1,12 +1,7 @@
 {% extends 'global_template.html' %}
 
 {% block authorization %}
-    {% if user.is_authenticated %}
-        <script>
-            alert('{{ user|upper }} is already authenticated...');
-            window.location.href = {% url 'index_view' %};
-        </script>
-    {% else %}
+
         <div class="dropdown">
             <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 authorize
@@ -17,5 +12,5 @@
                 <a class="dropdown-item" href="{% url 'registration' %}">registration</a>
             </div>
         </div>
-    {% endif %}
+
 {% endblock %}

@@ -1,13 +1,34 @@
 from django.views import View
-from .forms import PersonCreateForm, TestForm
+from .forms import PersonForm, TestForm, PersonalProfileForm
 from django.shortcuts import redirect
 from django.views.generic.edit import FormView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Person
+from .models import Person, PersonalProfile
 from django.views.generic import DetailView
+
+
+
+
+class UpdateProfile(View):
+    
+    def get(self, request, nick):
+        person = Person.objects.get(username=nick)
+        bound_form = PersonalProfileForm(instance=person)
+        return render(request, 'authorization/profile_update_form.html', {'form': bound_form, 'person': person})
+
+    def post(self, request, nick):
+        person = Person.objects.get(username=nick)
+        bound_form = PersonalProfileForm(request.POST, instance=person)
+        
+        if bound_form.is_valid():
+            update_person = bound_form.save()
+            return redirect('person_profile', nick=person.username)
+            # return HttpResponse('OK')
+        return render(request, 'authorization/profile_update_form.html', {'form': bound_form, 'person': person})
+
 
 
 
@@ -27,7 +48,7 @@ class CreateTest(View):
 
 
 class RegistrationFormView(FormView):
-    form_class = PersonCreateForm
+    form_class = PersonForm
     success_url = '/hasker/'
     template_name = 'authorization/registration.html'
 
@@ -44,7 +65,7 @@ class RegistrationFormView(FormView):
 
 def signup(request):
     if request.method == "POST":
-        form = PersonCreateForm(request.POST, request.FILES)
+        form = PersonForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
             user.refresh_from_db()
@@ -56,7 +77,7 @@ def signup(request):
             return redirect("index_view")
     
     else:
-        form = PersonCreateForm()
+        form = PersonForm()
     return render(request, 'authorization/registration.html', {'form': form})
 
 
@@ -74,19 +95,15 @@ class LoginFormView(FormView):
         return super(LoginFormView, self).form_invalid(form)
 
 
-
 class LogOutFormView(View):
     def get(self, request):
         logout(request)
         return redirect('index_view')
 
 
+def person_profile(request, nick):
+    profile = PersonalProfile.objects.get(person__username=nick)
+    
+    return render(request, 'authorization/person_profile.html', {'profile': profile})
 
-def person_detail(request, nick):
-    
-    user = Person.objects.get(username=nick)
-    template_name = 'authorization/person_profile.html'
-    context_object_name = 'person_profile'
-    
-    return render(request, template_name, {context_object_name: user})
-    
+

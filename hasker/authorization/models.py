@@ -11,20 +11,20 @@ class Person(AbstractUser):
 
     class Meta:
         verbose_name = 'Person'
-
-    def __str__(self):
-        return self.username
     
     def get_absolute_url(self):
         return reverse('person_profile', {'nick': self.username})
 
 
 class PersonalProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    person = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='avatars/', default='avatars/def_ava.jpg')
 
-    def __repr__(self):
-        return self.user.username
+    def __str__(self):
+        return f'{self.person.username} <{self.person.email}>'
+    
+    def get_absolute_url(self):
+        return reverse('person_profile', {'nick': self.person})
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)

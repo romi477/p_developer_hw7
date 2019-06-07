@@ -17,6 +17,12 @@
     margin: 25px;
 }
 
+.card-img-top {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .pagination {
     margin-left: auto;
     margin-right: auto;
