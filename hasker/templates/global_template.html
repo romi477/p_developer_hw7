@@ -35,8 +35,10 @@
             </form>
             {% block authorization %}
             {% endblock %}
-            <a class="btn btn-light" href="/admin">Admin</a>
 
+            {% if request.user.is_authenticated and request.user.is_staff %}
+                <a class="btn btn-light" href="/admin">Admin</a>
+            {% endif %}
         </div>
     </nav>
 

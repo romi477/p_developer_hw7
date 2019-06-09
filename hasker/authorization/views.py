@@ -1,13 +1,17 @@
 from django.views import View
-from .forms import PersonForm, TestForm, PersonalProfileForm
+from .forms import PersonForm, TestForm, ProfileForm
 from django.shortcuts import redirect
 from django.views.generic.edit import FormView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Person, PersonalProfile
+from .models import Person, PersonProfile
+from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic import DetailView
+from django.contrib.auth.decorators import login_required ,permission_required
+from django.urls import reverse
+from django.conf import settings
 
 
 
@@ -16,17 +20,16 @@ class UpdateProfile(View):
     
     def get(self, request, nick):
         person = Person.objects.get(username=nick)
-        bound_form = PersonalProfileForm(instance=person)
+        bound_form = ProfileForm(instance=person)
         return render(request, 'authorization/profile_update_form.html', {'form': bound_form, 'person': person})
 
     def post(self, request, nick):
         person = Person.objects.get(username=nick)
-        bound_form = PersonalProfileForm(request.POST, instance=person)
+        bound_form = ProfileForm(request.POST, instance=person)
         
         if bound_form.is_valid():
-            update_person = bound_form.save()
+            bound_form.save()
             return redirect('person_profile', nick=person.username)
-            # return HttpResponse('OK')
         return render(request, 'authorization/profile_update_form.html', {'form': bound_form, 'person': person})
 
 
@@ -101,9 +104,11 @@ class LogOutFormView(View):
         return redirect('index_view')
 
 
-def person_profile(request, nick):
-    profile = PersonalProfile.objects.get(person__username=nick)
-    
+def person_profile(request):
+    try:
+        profile = PersonProfile.objects.get(person__username=request.user)
+    except ObjectDoesNotExist:
+        return redirect('login')
     return render(request, 'authorization/person_profile.html', {'profile': profile})
 
 

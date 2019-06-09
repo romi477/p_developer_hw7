@@ -1,5 +1,6 @@
 import os
 
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -90,6 +91,8 @@ USE_L10N = True
 USE_TZ = True
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+LOGIN_URL = 'http://127.0.0.1:8888/hasker/auth/login/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'files', 'media')

@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .models import Person, PersonalProfile, Test
+from .models import Person, PersonProfile, Test
 from django.forms import ModelForm
 
 
@@ -11,7 +11,7 @@ class TestForm(ModelForm):
 
 
 class PersonForm(UserCreationForm):
-    email = forms.EmailField(required=True)
+    # email = forms.EmailField(required=True)
     avatar = forms.ImageField(required=False)
 
     class Meta:
@@ -20,23 +20,16 @@ class PersonForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super(PersonForm, self).save(commit=False)
-        user.email = self.cleaned_data['email']
+        # user.email = self.cleaned_data['email']
         user.personalprofile.avatar = self.cleaned_data['avatar']
         if commit:
             user.save()
         return user
 
 
-class PersonalProfileForm(forms.ModelForm):
+class ProfileForm(forms.ModelForm):
     email = forms.EmailField(required=True)
 
     class Meta:
-        model = PersonalProfile
+        model = PersonProfile
         fields = ('email', 'avatar')
-
-    # def save(self, commit=True):
-    #     profile = super(PersonProfileForm, self).save(commit=False)
-    #     profile.person.email = self.cleaned_data['email']
-    #     if commit:
-    #         profile.save()
-    #     return profile
