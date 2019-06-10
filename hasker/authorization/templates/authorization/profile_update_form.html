@@ -3,10 +3,9 @@
 
 
 {% block content %}
-
     <h3 style="text-align: center; color: MediumSeaGreen; margin-top: 16px;">Edit profile: {{ person.username }}</h3>
 
-    <form action="{% url 'update_profile' nick=person.username %}" enctype="multipart/form-data" method="post">
+    <form action="{% url 'update_profile' %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         {{ form|crispy }}
 
@@ -14,5 +13,4 @@
             <input type ="submit" class="btn btn-outline-success" id="btn1" value ="save"/>
         </div>
     </form>
-
 {% endblock %}

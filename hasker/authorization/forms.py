@@ -11,20 +11,18 @@ class TestForm(ModelForm):
 
 
 class PersonForm(UserCreationForm):
-    # email = forms.EmailField(required=True)
     avatar = forms.ImageField(required=False)
 
     class Meta:
         model = Person
         fields = ('username', 'email', 'avatar', 'password1', 'password2',)
 
-    def save(self, commit=True):
-        user = super(PersonForm, self).save(commit=False)
-        # user.email = self.cleaned_data['email']
-        user.personalprofile.avatar = self.cleaned_data['avatar']
-        if commit:
-            user.save()
-        return user
+    # def save(self, commit=True):
+    #     person = super(PersonForm, self).save(commit=False)
+    #     person.profile.avatar = self.cleaned_data['avatar']
+    #     if commit:
+    #         person.save()
+    #     return person
 
 
 class ProfileForm(forms.ModelForm):

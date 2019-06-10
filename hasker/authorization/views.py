@@ -8,28 +8,29 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Person, PersonProfile
 from django.core.exceptions import ObjectDoesNotExist
-from django.views.generic import DetailView
-from django.contrib.auth.decorators import login_required ,permission_required
-from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.views.generic import DetailView
+from django.urls import reverse
 
 
 
 
 class UpdateProfile(View):
     
-    def get(self, request, nick):
-        person = Person.objects.get(username=nick)
+    def get(self, request):
+        person = Person.objects.get(username=request.user)
         bound_form = ProfileForm(instance=person)
         return render(request, 'authorization/profile_update_form.html', {'form': bound_form, 'person': person})
 
-    def post(self, request, nick):
-        person = Person.objects.get(username=nick)
+
+    def post(self, request):
+        person = Person.objects.get(username=request.user)
         bound_form = ProfileForm(request.POST, instance=person)
         
         if bound_form.is_valid():
             bound_form.save()
-            return redirect('person_profile', nick=person.username)
+            return redirect('person_profile')
         return render(request, 'authorization/profile_update_form.html', {'form': bound_form, 'person': person})
 
 
@@ -45,7 +46,7 @@ class CreateTest(View):
     def post(self, request):
         bound_form = TestForm(request.POST, request.FILES)
         if bound_form.is_valid():
-            obj = bound_form.save()
+            bound_form.save()
             return HttpResponse('OK')
         return HttpResponse(bound_form.errors)
 
@@ -57,7 +58,6 @@ class RegistrationFormView(FormView):
 
 
     def form_valid(self, form):
-        form.save()
         self.user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password2'])
         login(self.request, self.user)
         return super(RegistrationFormView, self).form_valid(form)
@@ -111,4 +111,11 @@ def person_profile(request):
         return redirect('login')
     return render(request, 'authorization/person_profile.html', {'profile': profile})
 
+@login_required(login_url=settings.LOGIN_URL)
+def person_info(request, nick):
+    try:
+        profile_info = PersonProfile.objects.get(person__username=nick)
+    except ObjectDoesNotExist:
+        return HttpResponse(f'404 User "{nick}" does not exist.')
+    return render(request, 'authorization/person_profile.html', {'profile': profile_info, 'nick': nick})
 

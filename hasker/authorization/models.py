@@ -11,29 +11,23 @@ class Person(AbstractUser):
 
     class Meta:
         verbose_name = 'Person'
-    
-    # def get_absolute_url(self):
-    #     return reverse('person_profile', {'nick': self.username})
 
 
 class PersonProfile(models.Model):
-    person = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    person = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='profile', on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='avatars/', default='avatars/def_ava.jpg')
 
     def __str__(self):
         return f'{self.person.username} <{self.person.email}>'
     
-    # def get_absolute_url(self):
-    #     return reverse('person_profile', {'nick': self.person})
-
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_personal_profile(sender, **kwargs):
+def create_person_profile(sender, instance, **kwargs):
     if kwargs['created']:
-        PersonProfile.objects.create(user=kwargs['instance'])
+        PersonProfile.objects.create(person=instance)
+    instance.profile.save()
 
-
-post_save.connect(create_personal_profile, sender=settings.AUTH_USER_MODEL)
+# post_save.connect(create_person_profile, sender=settings.AUTH_USER_MODEL)
 
 
 class Test(models.Model):
