@@ -1,4 +1,5 @@
 from django.urls import path
+from django.conf.urls.static import static
 from .views import *
 
 
@@ -12,4 +13,3 @@ urlpatterns = [
     path('profile/update/', UpdateProfile.as_view(), name='update_profile'),
     path('<nick>/', person_info, name='person_info'),
 ]
-

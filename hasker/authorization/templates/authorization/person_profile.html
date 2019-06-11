@@ -12,10 +12,10 @@
             </ul>
         </div>
         <div class="card-body">
-            <img src="{{ profile.avatar.url }}" class="card-img-top" style="width: 12rem;" alt="avatars/def_ava.jpg">
-            <h5 class="card-title">[id: {{ profile.person.id }}] {{ profile.person.username }}</h5>
-            <p class="card-text">E-mail: {{ profile.person.email }}</p>
-            <p class="card-text">Join date: {{ profile.person.date_joined }}</p>
+            <img src="{{ person.avatar.url }}" class="card-img-top" style="width: 12rem;" alt="avatars/def_ava.jpg">
+            <h5 class="card-title">[id: {{ person.id }}] {{ person.username }}</h5>
+            <p class="card-text">E-mail: {{ person.email }}</p>
+            <p class="card-text">Join date: {{ person.date_joined }}</p>
             {% if not nick %}
                 <a href="{% url 'update_profile' %}" class="btn btn-outline-success">edit profile</a>
                 <a href="#" class="btn btn-outline-success">delete profile</a>

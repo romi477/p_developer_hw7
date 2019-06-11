@@ -6,7 +6,7 @@
 
     <h3 style="text-align: center; color: MediumSeaGreen; margin-top: 16px;">Registration:</h3>
 
-    <form action="{% url 'registration' %}" enctype="multipart/form-data" method="post">
+    <form enctype="multipart/form-data" method="post" action="{% url 'registration' %}">
         {% csrf_token %}
         {{ form|crispy }}
 

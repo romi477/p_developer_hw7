@@ -7,28 +7,19 @@ from django.conf import settings
 
 
 
-class Person(AbstractUser):
 
+class Person(AbstractUser):
+    
     class Meta:
         verbose_name = 'Person'
 
-
-class PersonProfile(models.Model):
-    person = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='profile', on_delete=models.CASCADE)
+    email = models.EmailField(max_length=254, unique=True, verbose_name='email address')
     avatar = models.ImageField(upload_to='avatars/', default='avatars/def_ava.jpg')
 
     def __str__(self):
-        return f'{self.person.username} <{self.person.email}>'
-    
+        return f'{self.username} <{self.email}>'
 
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_person_profile(sender, instance, **kwargs):
-    if kwargs['created']:
-        PersonProfile.objects.create(person=instance)
-    instance.profile.save()
-
-# post_save.connect(create_person_profile, sender=settings.AUTH_USER_MODEL)
-
+   
 
 class Test(models.Model):
     person = models.CharField(max_length=10)

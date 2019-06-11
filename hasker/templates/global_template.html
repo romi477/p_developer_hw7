@@ -17,17 +17,17 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
+
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Product types</a>
+                    <a class="nav-link" href="#">Top quesions</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Client base</a>
-                </li>
-                {% if user.is_authenticated and user.is_staff %}
+
+                {% if request.user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><small>add-object</small></a>
+                        <a class="nav-link" href="#"><h style="font-style: italic">Ask quesion!</h></a>
                     </li>
                 {% endif %}
+
             </ul>
             <form class="form-inline my-2 my-lg-0" action="#">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
