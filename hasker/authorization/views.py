@@ -1,17 +1,16 @@
 from django.views import View
-from .forms import PersonForm, TestForm, PersonProfile
+from .forms import PersonForm, PersonProfile
 from django.shortcuts import redirect
 from django.views.generic.edit import FormView
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Person
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from django.views.generic import DetailView
-from django.urls import reverse
+
 
 
 
@@ -49,24 +48,6 @@ class UpdateProfile(View):
         return render(request, 'authorization/profile_update_form.html', {'form': bound_form, 'person': person})
 
 
-def signup(request):
-    if request.method == "POST":
-        form = PersonForm(request.POST, request.FILES)
-        if form.is_valid():
-            user = form.save()
-            user.refresh_from_db()
-            user.avatar = form.cleaned_data.get("avatar")
-            user.save()
-            raw_password = form.cleaned_data.get("password2")
-            user = authenticate(username=user.username, password=raw_password)
-            login(request, user)
-            return redirect("index_view")
-
-    else:
-        form = PersonForm()
-    return render(request, 'authorization/registration.html', {'form': form})
-
-
 class LoginFormView(FormView):
     form_class = AuthenticationForm
     template_name = 'authorization/login.html'
@@ -102,22 +83,7 @@ def person_info(request, nick):
         person = Person.objects.get(username=nick)
     except ObjectDoesNotExist:
         return HttpResponse(f'404 User "{nick}" does not exist.')
-    return render(request, 'authorization/person_profile.html', {'person': person, 'nick': True})
+    return render(request, 'authorization/person_profile.html', {'person': person, 'nick': nick})
 
 
 
-
-
-class CreateTest(View):
-
-    def get(self, request):
-        model_form = TestForm()
-        context = {'model_form': model_form, 'object_name': 'Test', 'object_url': 'add_obj'}
-        return render(request, 'authorization/add_object.html', context)
-
-    def post(self, request):
-        bound_form = TestForm(request.POST, request.FILES)
-        if bound_form.is_valid():
-            bound_form.save()
-            return HttpResponse('OK')
-        return HttpResponse(bound_form.errors)
