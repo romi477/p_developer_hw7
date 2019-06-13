@@ -26,7 +26,7 @@ class Question(models.Model):
     slug = models.SlugField(max_length=72, unique=True)
     creation = models.DateField(auto_now_add=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    tags = models.ManyToManyField('Tag', blank=True, null=True, related_name='questions')
+    tags = models.ManyToManyField(Tag, blank=True, related_name='questions')
     
     def __str__(self):
         return f'{self.title[:11]} - {self.author}'

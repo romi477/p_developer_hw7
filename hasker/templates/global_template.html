@@ -22,6 +22,10 @@
                     <a class="nav-link" href="#">Hot questions <span class="sr-only">(current)</span></a>
                 </li>
 
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'tags_view' %}">Tags <span class="sr-only">(current)</span></a>
+                </li>
+
                 {% if request.user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="#">Ask quesion!</a>

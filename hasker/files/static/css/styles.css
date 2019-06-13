@@ -10,6 +10,8 @@
 }
 
 .list-group {
+    width: 500px;
+    margin: auto;
     color: MediumSeaGreen;
 }
 
@@ -33,10 +35,6 @@
     color: grey;
 }
 
-
-.list-group-item a {
-    color: MediumSeaGreen;
-}
 
 .form-group {
     width: 500px;
