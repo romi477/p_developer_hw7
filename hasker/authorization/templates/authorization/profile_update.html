@@ -1,14 +1,11 @@
 {% extends 'authorization/base_auth.html' %}
 {% load crispy_forms_tags %}
 
-
 {% block content %}
     <h3 style="text-align: center; color: MediumSeaGreen; margin-top: 16px;">Edit profile: {{ person.username }}</h3>
-
     <form action="{% url 'update_profile' %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         {{ form|crispy }}
-
         <div class="col text-center" id="row1">
             <input type ="submit" class="btn btn-outline-success" id="btn1" value ="save"/>
         </div>

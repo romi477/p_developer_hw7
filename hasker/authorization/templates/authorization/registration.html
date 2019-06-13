@@ -1,18 +1,13 @@
 {% extends 'authorization/base_auth.html' %}
 {% load crispy_forms_tags %}
 
-
 {% block content %}
-
     <h3 style="text-align: center; color: MediumSeaGreen; margin-top: 16px;">Registration:</h3>
-
     <form enctype="multipart/form-data" method="post" action="{% url 'registration' %}">
         {% csrf_token %}
         {{ form|crispy }}
-
         <div class="col text-center" id="row1">
             <input type ="submit" class="btn btn-outline-success" id="btn1" value ="registration"/>
         </div>
     </form>
-
 {% endblock %}

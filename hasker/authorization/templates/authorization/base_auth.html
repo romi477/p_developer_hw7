@@ -1,7 +1,6 @@
 {% extends 'global_template.html' %}
 
 {% block authorization %}
-
     {% if request.user.is_authenticated %}
         <div class="dropdown">
             <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -11,7 +10,6 @@
                 <a class="dropdown-item" href="{% url 'person_profile' %}">my profile</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'logout' %}">log out</a>
-
             </div>
         </div>
     {% else %}
@@ -26,5 +24,4 @@
             </div>
         </div>
     {% endif %}
-
 {% endblock %}

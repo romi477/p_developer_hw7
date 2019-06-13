@@ -3,7 +3,6 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 SECRET_KEY = 'ak8+)_h8f7-p*%m8t=3&ia)tz8i76_hyp80is11c-6-lxl=d7-'
 
 DEBUG = True
@@ -92,7 +91,7 @@ USE_TZ = True
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-LOGIN_URL = 'http://127.0.0.1:8888/hasker/auth/login/'
+LOGIN_URL = '/hasker/auth/login/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'files', 'media')

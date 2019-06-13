@@ -24,10 +24,13 @@ class Question(models.Model):
     title = models.CharField(max_length=144, db_index=True)
     content = models.TextField()
     slug = models.SlugField(max_length=72, unique=True)
-    creation = models.DateField(auto_now_add=True)
+    pub_date = models.DateField(auto_now_add=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, blank=True, related_name='questions')
-    
+
+    class Meta:
+        ordering = ('-pub_date',)
+
     def __str__(self):
         return f'{self.title[:11]} - {self.author}'
     
@@ -35,9 +38,12 @@ class Question(models.Model):
 class Answer(models.Model):
     content = models.TextField()
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    creation = models.DateField(auto_now_add=True)
+    pub_date = models.DateField(auto_now_add=True)
     flag = models.NullBooleanField()
     votes = GenericRelation(Vote)
+
+    class Meta:
+        ordering = ('-pub_date',)
     
     def __str__(self):
         return f'{self.content[:14]} - {self.author}'

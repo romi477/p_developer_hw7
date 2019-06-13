@@ -2,14 +2,12 @@
 
 
 {% block content %}
-
     <div class="card text-center">
         <div class="card-header">
             <ul class="nav nav-tabs">
-
                 {% if nick %}
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'person_info' nick=nick %}">{{ person.username }}s profile</a>
+                    <a class="nav-link active" href="{% url 'person_info' nick=nick %}">Profile</a>
                 </li>
                 {% else %}
                 <li class="nav-item">
@@ -23,11 +21,8 @@
                 <li class="nav-item">
                     <a class="nav-link btn btn-btn-link" href="#">Answers</a>
                 </li>
-
             </ul>
-
         </div>
-
         <div class="card-body">
             <img src="{{ person.avatar.url }}" class="card-img-top" style="width: 12rem;" alt="avatars/def_ava.jpg">
             <h5 class="card-title">[id: {{ person.id }}] {{ person.username }}</h5>
@@ -37,9 +32,7 @@
                 <a href="{% url 'update_profile' %}" class="btn btn-outline-success">edit profile</a>
                 <a href="#" class="btn btn-outline-success">delete profile</a>
             {% endif %}
-
         </div>
     </div>
-
 {% endblock %}
 
