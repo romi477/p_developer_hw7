@@ -28,7 +28,7 @@
 
                 {% if request.user.is_authenticated %}
                     <li class="nav-item">
-                        <strong><a class="nav-link text-info" href="#">Ask quesion!</a></strong>
+                        <strong><a class="nav-link text-info" href="{% url 'add_question' %}">Ask quesion!</a></strong>
                     </li>
                 {% endif %}
 
