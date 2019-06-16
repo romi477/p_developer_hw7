@@ -1,8 +1,8 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from .models import Question
+from .models import Question, Answer, Tag
 
 admin.site.register(Question)
+admin.site.register(Answer)
+admin.site.register(Tag)
 
-
-admin.site.site_url = 'http://127.0.0.1:8888/hasker/'
+admin.site.site_url = '/hasker/'

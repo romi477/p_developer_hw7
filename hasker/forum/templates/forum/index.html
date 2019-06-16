@@ -10,31 +10,24 @@
     <table class="table">
   <thead>
     <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
+      <th scope="col" class="col-1">#</th>
+      <th scope="col" class="col-1">Votes</th>
+      <th scope="col" class="col-1">Answers</th>
+      <th scope="col" class="col-3">Question</th>
+      <th scope="col" class="col-1">Author</th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
+
+    {% for q in questions %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>...</td>
+        <td>...</td>
+        <td>{{ q.title }}</td>
+        <td>{{ q.author.username }}</td>
+      </tr>
+    {% endfor %}
   </tbody>
 </table>
 

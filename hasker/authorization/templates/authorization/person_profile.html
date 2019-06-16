@@ -9,18 +9,24 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="{% url 'person_info' nick=nick %}">Profile</a>
                 </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'person_profile' %}">My profile</a>
-                </li>
-                {% endif %}
-
                 <li class="nav-item">
                     <a class="nav-link btn btn-btn-link" href="#">Questions</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link btn btn-btn-link" href="#">Answers</a>
                 </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'person_profile' %}">My profile</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link btn btn-btn-link" href="#">My questions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-btn-link" href="#">My answers</a>
+                </li>
+                {% endif %}
             </ul>
         </div>
         <div class="card-body">

@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.text import slugify
 
 
+
 class Vote(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='likes', on_delete=models.CASCADE)
     
@@ -34,15 +35,17 @@ class Question(models.Model):
     def __str__(self):
         return f'{self.title[:11]} - {self.author}'
     
-    def save(self, *args, **kwargs):
-        if not self.pk:
+    def save(self, tag_list=[], *args, **kwargs):
+        if not self.id:
             self.slug = slugify(self.title)
         super(Question, self).save(*args, **kwargs)
+        tags = []
+        for t in tag_list:
+            tag, created = Tag.objects.get_or_create(name=t)
+            tags.append(tag)
+            self.tags.add(*tags)
     
-    # def create_tags(self):
-    #     for t in [tag.strip() for tag in self.tags.split(',')]:
-    #         new_tag = Tag(name=t)
-    #         new_tag.save()
+
     
     
 class Answer(models.Model):
