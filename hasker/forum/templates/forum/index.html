@@ -3,17 +3,16 @@
 
 {% block content %}
 
-<div style="background-color: #eee; text-align: center;">
-    <h5>New questions</h5>
+<div style="text-align: center;">
+    <h3 style="color: MediumSeaGreen; margin-top: 16px;">New questions</h3>
 </div>
-
     <table class="table">
   <thead>
     <tr>
       <th scope="col" class="col-1">#</th>
-      <th scope="col" class="col-1">Votes</th>
-      <th scope="col" class="col-1">Answers</th>
       <th scope="col" class="col-3">Question</th>
+      <th scope="col" class="col-1">Answers</th>
+      <th scope="col" class="col-1">Votes</th>
       <th scope="col" class="col-1">Author</th>
     </tr>
   </thead>
@@ -22,10 +21,21 @@
     {% for q in questions %}
       <tr>
         <th scope="row">{{ forloop.counter }}</th>
+        <td><a style="color: black" href="{% url 'question_detail' slug=question.slug %}">{{ q.title }}</a>
+          {% for t in q.tags.all %}
+            <span class="badge badge-light">
+              <a style="color: MediumSeaGreen" href="{% url 'tag_questions_list' tag=t %}">
+                {{ t }}
+              </a>
+            </span>
+          {% endfor %}</td>
         <td>...</td>
         <td>...</td>
-        <td>{{ q.title }}</td>
-        <td>{{ q.author.username }}</td>
+        <td>
+          <a style="color: MediumSeaGreen" href="{% url 'person_info' nick=q.author.username %}">
+          {{ q.author.username }}
+          </a>
+        </td>
       </tr>
     {% endfor %}
   </tbody>

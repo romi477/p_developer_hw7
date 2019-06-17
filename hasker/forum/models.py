@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.utils.text import slugify
-
+from django.shortcuts import reverse
 
 
 class Vote(models.Model):
@@ -35,6 +35,9 @@ class Question(models.Model):
     def __str__(self):
         return f'{self.title[:11]} - {self.author}'
     
+    def get_absolure_url(self):
+        return reverse('question_detail', {'slug': self.slug})
+    
     def save(self, tag_list=[], *args, **kwargs):
         if not self.id:
             self.slug = slugify(self.title)
@@ -46,8 +49,6 @@ class Question(models.Model):
             self.tags.add(*tags)
     
 
-    
-    
 class Answer(models.Model):
     content = models.TextField()
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -60,4 +61,3 @@ class Answer(models.Model):
     
     def __str__(self):
         return f'{self.content[:14]} - {self.author}'
-    
