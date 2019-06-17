@@ -11,14 +11,16 @@ from django.conf import settings
 
 
 def tag_questions(request, tag):
-    queryset = Question.objects.filter(tags__name=tag)
-    return render(request, 'forum/tag_questions_list.html', {'questions': queryset, 'tagname': tag})
+    questions = Question.objects.filter(tags__name=tag)
+    return render(request, 'forum/tag_questions_list.html', {'questions': questions, 'tagname': tag})
+
 
 class TagListView(ListView):
     model = Tag
     template_name = 'forum/tag_list.html'
     context_object_name = 'tag_list'
     ordering = ('name',)
+
 
 class QuestionDetail(DetailView):
     model = Question
@@ -56,8 +58,8 @@ class QuestionCreate(FormView):
 
 class Index(ListView):
     model = Question
-    context_object_name = 'questions'
     template_name = 'forum/index.html'
+    context_object_name = 'questions'
     paginate_by = 20
 
     def get_queryset(self):

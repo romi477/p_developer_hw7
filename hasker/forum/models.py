@@ -35,8 +35,8 @@ class Question(models.Model):
     def __str__(self):
         return f'{self.title[:11]} - {self.author}'
     
-    def get_absolure_url(self):
-        return reverse('question_detail', {'slug': self.slug})
+    def get_absolute_url(self):
+        return reverse('question_detail', kwargs={'slug': self.slug})
     
     def save(self, tag_list=[], *args, **kwargs):
         if not self.id:

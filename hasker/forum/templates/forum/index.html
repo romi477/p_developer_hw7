@@ -21,7 +21,7 @@
     {% for q in questions %}
       <tr>
         <th scope="row">{{ forloop.counter }}</th>
-        <td><a style="color: black" href="{% url 'question_detail' slug=question.slug %}">{{ q.title }}</a>
+        <td><a style="color: black" href="{{ q.get_absolute_url }}">{{ q.title }}</a>
           {% for t in q.tags.all %}
             <span class="badge badge-light">
               <a style="color: MediumSeaGreen" href="{% url 'tag_questions_list' tag=t %}">
