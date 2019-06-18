@@ -4,6 +4,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 from django.utils.text import slugify
 from django.shortcuts import reverse
+from .utils import unique_slug_generator
 
 
 class Vote(models.Model):
@@ -40,7 +41,7 @@ class Question(models.Model):
     
     def save(self, tag_list=[], *args, **kwargs):
         if not self.id:
-            self.slug = slugify(self.title)
+            self.slug = unique_slug_generator(self, self.title)
         super(Question, self).save(*args, **kwargs)
         tags = []
         for t in tag_list:
