@@ -1,28 +1,61 @@
 {% extends 'forum/base_forum.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
 
-    <h3 style="text-align: center; color: MediumSeaGreen; margin-top: 16px;">{{ question.title }}:</h3>
+    <h3 style="text-align: center; color: MediumSeaGreen; margin-top: 16px;">{{ question.title }}</h3>
 
-    <div class="accordion" id="accordionExample">
         <div class="card">
-            <div class="card-header" id="headingOne">
-                <h5 class="mb-0">
-                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
-                            aria-expanded="true" aria-controls="collapseOne">
-                        Some text
-                    </button>
-                </h5>
-            </div>
-
-            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                <div class="card-body">
-                    lorem
-                </div>
+            <div class="card-body">
+                <img src="{{ question.author.avatar.url }}" style="width: 3rem;" vspace="10" align="bottom" alt="avatars/def_ava.jpg">
+                <h6 class="card-subtitle mb-2 text-muted">
+                    <a style="color: Gray;" href="{% url 'person_info' nick=question.author.username %}">
+                        {{ question.author.username }}</a>: {{ question.pub_date }}
+                </h6>
+                <p class="card-text">{{ question.content }}</p>
+                <p>
+                    {% for t in question.tags.all %}
+                    <span class="badge badge-light">
+                        <a style="color: MediumSeaGreen" href="{% url 'tag_questions_list' tag=t %}">{{ t }}</a>
+                    </span>
+                    {% endfor %}
+                </p>
             </div>
         </div>
 
+        {% for reply in object_list %}
+            <div class="card">
+                <div class="card-body">
+                    <img src="{{ reply.author.avatar.url }}" style="width: 3rem;" vspace="10" align="bottom"
+                         alt="avatars/def_ava.jpg">
 
-    </div>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        <a style="color: Gray" href="{% url 'person_info' nick=reply.author.username %}">
+                            {{ reply.author.username }}</a>: {{ reply.pub_date }}
+                        {% if reply.flag %}
+                            <img src="{{ MEDIA_URL }}png/starfull.png" width="32" height="32" hspace="700">
+                        {% endif %}
+                    </h6>
+                    <p class="card-text">{{ reply.body }}</p>
+                    <a href="#" class="card-link text-info">like</a>
+                    <a href="#" class="card-link text-info">dislike</a>
+                    {% if question.author == request.user %}
+                        <a href="{% url 'add_medal' slug=question.slug pk=reply.id %}" class="card-link text-info">medal</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+        {% include 'forum/pagination.html' %}
+
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'add_reply' slug=question.slug %}">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="col text-center" id="row1">
+                <input type="submit" class="btn btn-outline-success" id="btn1" value="publish"/>
+            </div>
+        </form>
+        {% endif %}
 
 {% endblock %}

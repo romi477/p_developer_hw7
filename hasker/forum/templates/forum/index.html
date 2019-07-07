@@ -9,7 +9,7 @@
     <table class="table">
   <thead>
     <tr>
-      <th scope="col" class="col-1">#</th>
+      <th scope="col" class="col-1" >Date</th>
       <th scope="col" class="col-3">Question</th>
       <th scope="col" class="col-1">Answers</th>
       <th scope="col" class="col-1">Votes</th>
@@ -20,16 +20,18 @@
 
     {% for q in questions %}
       <tr>
-        <th scope="row">{{ forloop.counter }}</th>
-        <td><a style="color: black" href="{{ q.get_absolute_url }}">{{ q.title }}</a>
+        <th scope="row" style="color: Gray;">{{ q.pub_date }}</th>
+        <td>
+          <a style="color: black" href="{{ q.get_absolute_url }}">{{ q.title }}</a>
           {% for t in q.tags.all %}
             <span class="badge badge-light">
               <a style="color: MediumSeaGreen" href="{% url 'tag_questions_list' tag=t %}">
                 {{ t }}
               </a>
             </span>
-          {% endfor %}</td>
-        <td>...</td>
+          {% endfor %}
+        </td>
+        <td>{{ q.replies.count }}</td>
         <td>...</td>
         <td>
           <a style="color: MediumSeaGreen" href="{% url 'person_info' nick=q.author.username %}">
@@ -37,8 +39,9 @@
           </a>
         </td>
       </tr>
+
     {% endfor %}
   </tbody>
 </table>
-
+{% include 'forum/pagination.html' %}
 {% endblock %}

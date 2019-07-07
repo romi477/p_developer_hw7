@@ -2,9 +2,9 @@ from django.db import models
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
-from django.utils.text import slugify
 from django.shortcuts import reverse
 from .utils import unique_slug_generator
+from django.core.mail import send_mail
 
 
 class Vote(models.Model):
@@ -23,10 +23,10 @@ class Tag(models.Model):
 
 
 class Question(models.Model):
-    title = models.CharField(max_length=144, db_index=True)
+    title = models.CharField(max_length=144, db_index=True, unique=True)
     content = models.TextField()
     slug = models.SlugField(max_length=72, unique=True)
-    pub_date = models.DateField(auto_now_add=True)
+    pub_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, blank=True, related_name='questions')
 
@@ -50,15 +50,24 @@ class Question(models.Model):
             self.tags.add(*tags)
     
 
-class Answer(models.Model):
-    content = models.TextField()
+class Reply(models.Model):
+    related_q = models.ForeignKey(Question, related_name='replies', on_delete=models.CASCADE)
+    body = models.TextField(db_index=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    pub_date = models.DateField(auto_now_add=True)
-    flag = models.NullBooleanField()
+    pub_date = models.DateTimeField(auto_now_add=True)
+    flag = models.BooleanField(default=False)
     votes = GenericRelation(Vote)
 
     class Meta:
         ordering = ('-pub_date',)
-    
+
     def __str__(self):
-        return f'{self.content[:14]} - {self.author}'
+        return f'{self.body[:14]} - {self.author}'
+
+    def send_email(self, mail_body):
+        send_mail(
+            'Hasker notification',
+            mail_body,
+            settings.EMAIL_HOST_USER,
+            [self.related_q.author.email]
+        )

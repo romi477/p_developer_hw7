@@ -1,7 +1,6 @@
 from django import forms
-from .models import Question
+from .models import Question, Reply
 from django.forms import ModelForm
-
 
 
 class QuestionForm(ModelForm):
@@ -17,3 +16,14 @@ class QuestionForm(ModelForm):
         model = Question
         fields = ('title', 'content', 'tags')
 
+
+class ReplyForm(forms.Form):
+    body = forms.CharField(label='my reply', widget=forms.Textarea(attrs={'rows': 5}))
+
+    def save(self, author, related_q):
+        my_reply = Reply.objects.create(
+            body=self.cleaned_data['body'],
+            author=author,
+            related_q=related_q
+        )
+        return my_reply
