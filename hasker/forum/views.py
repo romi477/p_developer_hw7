@@ -1,13 +1,46 @@
-from django.http import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import reverse
 from django.db.models import Q
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView
-from .models import Question, Tag, Reply
+from .models import Question, Tag, Reply, Vote
 from .forms import QuestionForm, ReplyForm
 from django.shortcuts import redirect
 from django.views.generic.list import MultipleObjectMixin
+from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
+
+
+
+def like(request, slug, pk):
+    reply = Reply.objects.get(pk=pk)
+    
+    reply_type = ContentType.objects.get_for_model(reply)
+    
+    user = request.user
+    
+    vote, is_created = Vote.objects.get_or_create(
+        content_type=reply_type,
+        object_id=reply.id,
+        user=user
+    )
+    return redirect('question_detail', slug=slug)
+
+
+def dislike(request, slug, pk):
+    reply = Reply.objects.get(pk=pk)
+    
+    reply_type = ContentType.objects.get_for_model(reply)
+    
+    user = request.user
+    
+    Vote.objects.filter(
+        content_type=reply_type,
+        object_id=reply.id,
+        user=user
+    ).delete()
+    return redirect('question_detail', slug=slug)
+
 
 
 def tag_questions(request, tag):
@@ -37,7 +70,7 @@ class QuestionDetail(DetailView, MultipleObjectMixin):
 
 def add_medal(request, slug, pk):
     reply = Reply.objects.get(pk=pk)
-
+    print('KWARGS', request)
     if reply.flag:
         reply.flag = False
     else:

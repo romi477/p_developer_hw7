@@ -10,4 +10,7 @@ urlpatterns = [
     path('question/<slug>/', QuestionDetail.as_view(), name='question_detail'),
     path('question/<slug>/add-reply/', ReplyCreate.as_view(), name='add_reply'),
     path('question/<slug>/<pk>/', add_medal, name='add_medal'),
+    
+    path('question/<slug>/<pk>/like/', like, name='like'),
+    path('question/<slug>/<pk>/dislike/', dislike, name='dislike')
 ]

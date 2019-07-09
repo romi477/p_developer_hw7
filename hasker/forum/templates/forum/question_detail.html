@@ -38,11 +38,20 @@
                         {% endif %}
                     </h6>
                     <p class="card-text">{{ reply.body }}</p>
-                    <a href="#" class="card-link text-info">like</a>
-                    <a href="#" class="card-link text-info">dislike</a>
-                    {% if question.author == request.user %}
-                        <a href="{% url 'add_medal' slug=question.slug pk=reply.id %}" class="card-link text-info">medal</a>
+
+                    rating: <b>{{ reply.total_votes }}</b>
+                    {% if user.is_authenticated %}
+                        <p>
+                        <a href="{% url 'like' slug=question.slug pk=reply.id %}" class="card-link text-info">like</a>
+                        <a href="{% url 'dislike' slug=question.slug pk=reply.id %}" class="card-link text-info">dislike</a>
+                        {% if question.author == user %}
+                            <a href="{% url 'add_medal' slug=question.slug pk=reply.id %}" class="card-link text-info">medal</a>
+                        {% endif %}
+                        </p>
                     {% endif %}
+
+
+
                 </div>
             </div>
         {% endfor %}

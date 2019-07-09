@@ -71,3 +71,8 @@ class Reply(models.Model):
             settings.EMAIL_HOST_USER,
             [self.related_q.author.email]
         )
+    
+    @property
+    def total_votes(self):
+        return self.votes.count()
+    
