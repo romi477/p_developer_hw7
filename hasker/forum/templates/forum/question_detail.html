@@ -15,9 +15,9 @@
                 </h6>
                 <p class="card-text">{{ question.content }}</p>
                 <p>
-                    {% for t in question.tags.all %}
+                    {% for tag in question.tags.all %}
                     <span class="badge badge-light">
-                        <a style="color: MediumSeaGreen" href="{% url 'tag_questions_list' tag=t %}">{{ t }}</a>
+                        <a style="color: MediumSeaGreen" href="{% url 'tag_questions' tag_name=tag %}">{{ tag }}</a>
                     </span>
                     {% endfor %}
                 </p>

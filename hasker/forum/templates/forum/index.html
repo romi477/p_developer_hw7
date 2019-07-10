@@ -1,6 +1,5 @@
 {% extends 'forum/base_forum.html' %}
 
-
 {% block content %}
 
 <div style="text-align: center;">
@@ -23,10 +22,10 @@
         <th scope="row" style="color: Gray;">{{ q.pub_date }}</th>
         <td>
           <a style="color: black" href="{{ q.get_absolute_url }}">{{ q.title }}</a>
-          {% for t in q.tags.all %}
+          {% for tag in q.tags.all %}
             <span class="badge badge-light">
-              <a style="color: MediumSeaGreen" href="{% url 'tag_questions_list' tag=t %}">
-                {{ t }}
+              <a style="color: MediumSeaGreen" href="{% url 'tag_questions' tag_name=tag %}">
+                {{ tag }}
               </a>
             </span>
           {% endfor %}
@@ -39,7 +38,6 @@
           </a>
         </td>
       </tr>
-
     {% endfor %}
   </tbody>
 </table>

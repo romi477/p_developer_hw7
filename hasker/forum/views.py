@@ -11,41 +11,18 @@ from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 
 
+class Index(ListView):
+    model = Question
+    template_name = 'forum/index.html'
+    context_object_name = 'questions'
+    paginate_by = 3
 
-def like(request, slug, pk):
-    reply = Reply.objects.get(pk=pk)
-    
-    reply_type = ContentType.objects.get_for_model(reply)
-    
-    user = request.user
-    
-    vote, is_created = Vote.objects.get_or_create(
-        content_type=reply_type,
-        object_id=reply.id,
-        user=user
-    )
-    return redirect('question_detail', slug=slug)
-
-
-def dislike(request, slug, pk):
-    reply = Reply.objects.get(pk=pk)
-    
-    reply_type = ContentType.objects.get_for_model(reply)
-    
-    user = request.user
-    
-    Vote.objects.filter(
-        content_type=reply_type,
-        object_id=reply.id,
-        user=user
-    ).delete()
-    return redirect('question_detail', slug=slug)
-
-
-
-def tag_questions(request, tag):
-    questions = Question.objects.filter(tags__name=tag)
-    return render(request, 'forum/tag_questions_list.html', {'questions': questions, 'tagname': tag})
+    def get_queryset(self):
+        search_query = self.request.GET.get('search', '')
+        if search_query:
+            queryset = Question.objects.filter(Q(title__icontains=search_query) | Q(content__icontains=search_query))
+            return queryset
+        return self.model.objects.all().order_by('-pub_date')
 
 
 class TagListView(ListView):
@@ -53,6 +30,11 @@ class TagListView(ListView):
     template_name = 'forum/tag_list.html'
     context_object_name = 'tag_list'
     ordering = ('name',)
+
+
+def tag_questions(request, tag_name):
+    questions = Question.objects.filter(tags__name=tag_name)
+    return render(request, 'forum/tag_questions.html', {'questions': questions, 'tag': tag_name})
 
 
 class QuestionDetail(DetailView, MultipleObjectMixin):
@@ -63,21 +45,45 @@ class QuestionDetail(DetailView, MultipleObjectMixin):
 
     def get_context_data(self, **kwargs):
         replyes = Reply.objects.filter(related_q__slug=self.kwargs['slug']).order_by('pub_date')
-        context = super(QuestionDetail, self).get_context_data(object_list=replyes, **kwargs)
-        context['form'] = ReplyForm()
-        return context
+        ctx = super(QuestionDetail, self).get_context_data(object_list=replyes, **kwargs)
+        ctx['form'] = ReplyForm()
+        return ctx
 
 
-def add_medal(request, slug, pk):
-    reply = Reply.objects.get(pk=pk)
-    print('KWARGS', request)
+def like(request, slug, reply_pk):
+    reply = Reply.objects.get(pk=reply_pk)
+
+    reply_type = ContentType.objects.get_for_model(reply)
+
+    vote, is_created = Vote.objects.get_or_create(
+        content_type=reply_type,
+        object_id=reply.id,
+        user=request.user
+    )
+    return redirect('question_detail', slug=slug)
+
+
+def dislike(request, slug, reply_pk):
+    reply = Reply.objects.get(pk=reply_pk)
+
+    reply_type = ContentType.objects.get_for_model(reply)
+
+    Vote.objects.filter(
+        content_type=reply_type,
+        object_id=reply.id,
+        user=request.user
+    ).delete()
+    return redirect('question_detail', slug=slug)
+
+
+def add_medal(request, slug, reply_pk):
+    reply = Reply.objects.get(pk=reply_pk)
     if reply.flag:
         reply.flag = False
     else:
         reply.flag = True
     reply.save()
     return redirect('question_detail', slug=slug)
-
 
 
 class ReplyCreate(FormView):
@@ -100,13 +106,12 @@ class ReplyCreate(FormView):
         return super(ReplyCreate, self).form_invalid(form)
 
 
-
 class QuestionCreate(FormView):
     form_class = QuestionForm
     template_name = 'forum/add_question.html'
 
     def get_success_url(self):
-        return reverse('index_view')
+        return reverse('index')
     
     def form_valid(self, form):
         self.question = form.save(commit=False)
@@ -118,17 +123,4 @@ class QuestionCreate(FormView):
     def form_invalid(self, form):
         return super(QuestionCreate, self).form_invalid(form)
 
-
-class Index(ListView):
-    model = Question
-    template_name = 'forum/index.html'
-    context_object_name = 'questions'
-    paginate_by = 3
-
-    def get_queryset(self):
-        search_query = self.request.GET.get('search', '')
-        if search_query:
-            queryset = Question.objects.filter(Q(title__icontains=search_query) | Q(content__icontains=search_query))
-            return queryset
-        return self.model.objects.all().order_by('-pub_date')
 

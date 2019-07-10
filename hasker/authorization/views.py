@@ -3,13 +3,11 @@ from django.views import View
 from django.conf import settings
 from django.shortcuts import render
 from .forms import PersonForm, PersonProfile
-from django.views.generic.edit import FormView
 from django.contrib.auth import login, logout
-from django.core.exceptions import ObjectDoesNotExist
+from django.views.generic.edit import FormView
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-
 
 
 class RegistrationFormView(FormView):
@@ -58,18 +56,17 @@ class LoginFormView(FormView):
 
 
 class LogOutFormView(View):
-    
+
     def get(self, request):
         logout(request)
-        return redirect('index_view')
+        return redirect('index')
 
 
 def person_profile(request):
-    try:
+    if request.user.is_authenticated:
         person = Person.objects.get(username=request.user.username)
-    except ObjectDoesNotExist:
-        return redirect('login')
-    return render(request, 'authorization/person_profile.html', {'person': person})
+        return render(request, 'authorization/person_profile.html', {'person': person})
+    return redirect('login')
 
 
 @login_required(login_url=settings.LOGIN_URL)

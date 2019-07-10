@@ -36,7 +36,6 @@
             <p class="card-text">Join date: {{ person.date_joined }}</p>
             {% if not nick %}
                 <a href="{% url 'update_profile' %}" class="btn btn-outline-success">edit profile</a>
-                <a href="#" class="btn btn-outline-success">delete profile</a>
             {% endif %}
         </div>
     </div>
