@@ -8,6 +8,7 @@ from django.views.generic.edit import FormView
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from forum.models import Question, Reply
 
 
 class RegistrationFormView(FormView):
@@ -75,4 +76,12 @@ def person_info(request, nick):
     return render(request, 'authorization/person_profile.html', {'person': person, 'nick': nick})
 
 
+def person_questions(request):
+    if request.user.is_authenticated:
+        questions = Question.objects.filter(author__username=request.user.username)
+        return render(request, 'authorization/person_questions.html', {'questions': questions})
 
+def person_replies(request):
+    if request.user.is_authenticated:
+        replies = Reply.objects.filter(author__username=request.user.username)
+        return render(request, 'authorization/person_replies.html', {'replies': replies})

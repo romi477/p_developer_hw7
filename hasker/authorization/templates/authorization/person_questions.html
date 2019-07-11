@@ -13,16 +13,28 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="{% url 'person_profile' %}">My profile</a>
                 </li>
+
                 <li class="nav-item">
                     <a class="nav-link btn btn-btn-link" href="{% url 'person_questions' %}">My questions</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link btn btn-btn-link" href="{% url 'person_replies' %}">My replies</a>
+                    <a class="nav-link btn btn-btn-link" href="#">My replies</a>
                 </li>
                 {% endif %}
             </ul>
         </div>
-        {% include 'authorization/_profile.html' %}
+        <div class="card-body">
+            <h3 style="text-align: center; color: MediumSeaGreen; margin-top: 16px;">{{ request.user.username }}'s questions:</h3>
+            <ul class="list-group" style="margin-top: 25px;">
+                {% for q in questions %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{{ q.get_absolute_url }}" style="color: MediumSeaGreen">
+                        {{ q.title }}
+                    </a>
+                    <span class="badge success badge-pill">...</span>
+                </li>
+                {% endfor %}
+    </ul>
+        </div>
     </div>
 {% endblock %}
-
