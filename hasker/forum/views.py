@@ -1,13 +1,12 @@
+from django.db.models import Q
 from django.shortcuts import render
 from django.shortcuts import reverse
-from django.db.models import Q
-from django.views.generic import ListView, DetailView
+from django.shortcuts import redirect
+from .forms import QuestionForm, ReplyForm
 from django.views.generic.edit import FormView
 from .models import Question, Tag, Reply, Vote
-from .forms import QuestionForm, ReplyForm
-from django.shortcuts import redirect
+from django.views.generic import ListView, DetailView
 from django.views.generic.list import MultipleObjectMixin
-from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 
 
@@ -46,7 +45,8 @@ class QuestionDetail(DetailView, MultipleObjectMixin):
     def get_context_data(self, **kwargs):
         replyes = Reply.objects.filter(related_q__slug=self.kwargs['slug']).order_by('pub_date')
         ctx = super(QuestionDetail, self).get_context_data(object_list=replyes, **kwargs)
-        ctx['form'] = ReplyForm()
+        if self.request.user.is_authenticated:
+            ctx['reply_form'] = ReplyForm()
         return ctx
 
 

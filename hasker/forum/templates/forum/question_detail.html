@@ -40,12 +40,12 @@
                     <p class="card-text">{{ reply.body }}</p>
 
                     rating: <b>{{ reply.total_votes }}</b>
-                    {% if user.is_authenticated %}
+                    {% if request.user.is_authenticated %}
                         <p>
-                        <a href="{% url 'like' slug=question.slug pk=reply.id %}" class="card-link text-info">like</a>
-                        <a href="{% url 'dislike' slug=question.slug pk=reply.id %}" class="card-link text-info">dislike</a>
-                        {% if question.author == user %}
-                            <a href="{% url 'add_medal' slug=question.slug pk=reply.id %}" class="card-link text-info">medal</a>
+                        <a href="{% url 'like' slug=question.slug reply_pk=reply.id %}" class="card-link text-info">like</a>
+                        <a href="{% url 'dislike' slug=question.slug reply_pk=reply.id %}" class="card-link text-info">dislike</a>
+                        {% if question.author == request.user %}
+                            <a href="{% url 'add_medal' slug=question.slug reply_pk=reply.id %}" class="card-link text-info">medal</a>
                         {% endif %}
                         </p>
                     {% endif %}
@@ -57,10 +57,10 @@
         {% endfor %}
         {% include 'forum/pagination.html' %}
 
-        {% if user.is_authenticated %}
+        {% if reply_form %}
         <form method="post" action="{% url 'add_reply' slug=question.slug %}">
             {% csrf_token %}
-            {{ form|crispy }}
+            {{ reply_form|crispy }}
             <div class="col text-center" id="row1">
                 <input type="submit" class="btn btn-outline-success" id="btn1" value="publish"/>
             </div>
