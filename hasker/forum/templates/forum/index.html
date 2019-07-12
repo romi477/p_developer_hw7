@@ -33,7 +33,7 @@
         <td>{{ q.replies.count }}</td>
         <td>...</td>
         <td>
-          <a style="color: MediumSeaGreen" href="{% url 'person_info' nick=q.author.username %}">
+          <a style="color: MediumSeaGreen" href="{% url 'person_info' nickname=q.author.username %}">
           {{ q.author.username }}
           </a>
         </td>

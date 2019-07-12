@@ -1,14 +1,15 @@
 from .models import Person
+from django.apps import apps
 from django.views import View
 from django.conf import settings
 from django.shortcuts import render
 from .forms import PersonForm, PersonProfile
 from django.contrib.auth import login, logout
+from django.http import HttpResponseForbidden
 from django.views.generic.edit import FormView
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from forum.models import Question, Reply
 
 
 class RegistrationFormView(FormView):
@@ -63,25 +64,25 @@ class LogOutFormView(View):
         return redirect('index')
 
 
+@login_required(login_url=settings.LOGIN_URL)
 def person_profile(request):
+    person = Person.objects.get(username=request.user.username)
+    return render(request, 'authorization/_profile.html', {'person': person})
+
+
+def person_profile_questions(request):
     if request.user.is_authenticated:
-        person = Person.objects.get(username=request.user.username)
-        return render(request, 'authorization/person_profile.html', {'person': person})
-    return redirect('login')
+        question = apps.get_model('forum', 'Question')
+        questions = question.objects.filter(author__username=request.user.username)
+        return render(request, 'authorization/_questions.html', {'questions': questions})
+    return HttpResponseForbidden('403, Forbidden')
 
 
 @login_required(login_url=settings.LOGIN_URL)
-def person_info(request, nick):
-    person = get_object_or_404(Person, username=nick)
-    return render(request, 'authorization/person_profile.html', {'person': person, 'nick': nick})
+def person_free_info(request, nickname):
+    if request.user.username == nickname:
+        return redirect('person_profile')
+    person = get_object_or_404(Person, username=nickname)
+    return render(request, 'authorization/_profile.html', {'person': person, 'nickname': nickname})
 
 
-def person_questions(request):
-    if request.user.is_authenticated:
-        questions = Question.objects.filter(author__username=request.user.username)
-        return render(request, 'authorization/person_questions.html', {'questions': questions})
-
-def person_replies(request):
-    if request.user.is_authenticated:
-        replies = Reply.objects.filter(author__username=request.user.username)
-        return render(request, 'authorization/person_replies.html', {'replies': replies})

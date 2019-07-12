@@ -1,0 +1,26 @@
+{% extends 'authorization/base_auth.html' %}
+
+
+{% block content %}
+    <div class="card text-center">
+        <div class="card-header">
+            <ul class="nav nav-tabs">
+                {% if not nickname %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'person_profile' %}">My profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-btn-link" href="{% url 'person_questions' %}">My questions</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="{% url 'person_info' nickname=nickname %}">User free info</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+        {% block cardbody %}
+        {% endblock %}
+    </div>
+{% endblock %}
+

@@ -10,7 +10,7 @@
             <div class="card-body">
                 <img src="{{ question.author.avatar.url }}" style="width: 3rem;" vspace="10" align="bottom" alt="avatars/def_ava.jpg">
                 <h6 class="card-subtitle mb-2 text-muted">
-                    <a style="color: Gray;" href="{% url 'person_info' nick=question.author.username %}">
+                    <a style="color: Gray;" href="{% url 'person_info' nickname=question.author.username %}">
                         {{ question.author.username }}</a>: {{ question.pub_date }}
                 </h6>
                 <p class="card-text">{{ question.content }}</p>
@@ -31,7 +31,7 @@
                          alt="avatars/def_ava.jpg">
 
                     <h6 class="card-subtitle mb-2 text-muted">
-                        <a style="color: Gray" href="{% url 'person_info' nick=reply.author.username %}">
+                        <a style="color: Gray" href="{% url 'person_info' nickname=reply.author.username %}">
                             {{ reply.author.username }}</a>: {{ reply.pub_date }}
                         {% if reply.flag %}
                             <img src="{{ MEDIA_URL }}png/starfull.png" width="32" height="32" hspace="700">
