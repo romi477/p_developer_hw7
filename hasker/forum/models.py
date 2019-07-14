@@ -29,6 +29,7 @@ class Question(models.Model):
     pub_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, blank=True, related_name='questions')
+    votes = GenericRelation(Vote)
 
     class Meta:
         ordering = ('-pub_date',)
@@ -48,6 +49,10 @@ class Question(models.Model):
             tag, created = Tag.objects.get_or_create(name=t)
             tags.append(tag)
             self.tags.add(*tags)
+
+    @property
+    def total_votes(self):
+        return self.votes.count()
     
 
 class Reply(models.Model):

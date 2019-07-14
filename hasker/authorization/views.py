@@ -72,8 +72,8 @@ def person_profile(request):
 
 def person_profile_questions(request):
     if request.user.is_authenticated:
-        question = apps.get_model('forum', 'Question')
-        questions = question.objects.filter(author__username=request.user.username)
+        model = apps.get_model('forum', 'Question')
+        questions = model.objects.filter(author__username=request.user.username)
         return render(request, 'authorization/_questions.html', {'questions': questions})
     return HttpResponseForbidden('403, Forbidden')
 

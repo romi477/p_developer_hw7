@@ -1,10 +1,12 @@
 from django.db.models import Q
 from django.shortcuts import render
 from django.shortcuts import reverse
+from django.http import JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from .forms import QuestionForm, ReplyForm
-from django.views.generic.edit import FormView
 from .models import Question, Tag, Reply, Vote
+from django.views.generic.edit import FormView
 from django.views.generic import ListView, DetailView
 from django.views.generic.list import MultipleObjectMixin
 from django.contrib.contenttypes.models import ContentType
@@ -14,21 +16,36 @@ class Index(ListView):
     model = Question
     template_name = 'forum/index.html'
     context_object_name = 'questions'
-    paginate_by = 3
+    paginate_by = 20
 
     def get_queryset(self):
         search_query = self.request.GET.get('search', '')
         if search_query:
             queryset = Question.objects.filter(Q(title__icontains=search_query) | Q(content__icontains=search_query))
             return queryset
-        return self.model.objects.all().order_by('-pub_date')
+        return self.model.objects.order_by('-pub_date')
 
 
 class TagListView(ListView):
     model = Tag
     template_name = 'forum/tag_list.html'
     context_object_name = 'tag_list'
-    ordering = ('name',)
+    paginate_by = 20
+
+    def get_queryset(self):
+        queryset = Tag.objects.all()
+        t_sorted = sorted(queryset, key=lambda tag: -tag.questions.count())
+        return t_sorted
+
+
+def hot_questions(request):
+    """
+    отношение GenericRelation(Vote) дублирует записи в кверисете по количеству votes,
+    distinct() для  sqlite не отрабатывал, пришлось взять set()
+    """
+    questions = Question.objects.order_by('votes', '-pub_date')[:10]
+    q_sorted = sorted(set(questions), key=lambda question: -question.total_votes)
+    return render(request, 'forum/questions_list.html', {'questions': q_sorted})
 
 
 def tag_questions(request, tag_name):
@@ -40,50 +57,60 @@ class QuestionDetail(DetailView, MultipleObjectMixin):
     model = Question
     template_name = 'forum/question_detail.html'
     context_object_name = 'question'
-    paginate_by = 3
+    paginate_by = 20
 
     def get_context_data(self, **kwargs):
         replyes = Reply.objects.filter(related_q__slug=self.kwargs['slug']).order_by('pub_date')
-        ctx = super(QuestionDetail, self).get_context_data(object_list=replyes, **kwargs)
+        context = super(QuestionDetail, self).get_context_data(object_list=replyes, **kwargs)
         if self.request.user.is_authenticated:
-            ctx['reply_form'] = ReplyForm()
-        return ctx
+            context['reply_form'] = ReplyForm()
+        return context
 
 
-def like(request, slug, reply_pk):
-    reply = Reply.objects.get(pk=reply_pk)
+def like(request, slug, reply_pk=None):
+    if reply_pk:
+        model_obj = Reply.objects.get(pk=reply_pk)
+    else:
+        model_obj = Question.objects.get(slug=slug)
 
-    reply_type = ContentType.objects.get_for_model(reply)
+    model_obj_type = ContentType.objects.get_for_model(model_obj)
 
     vote, is_created = Vote.objects.get_or_create(
-        content_type=reply_type,
-        object_id=reply.id,
+        content_type=model_obj_type,
+        object_id=model_obj.id,
         user=request.user
     )
     return redirect('question_detail', slug=slug)
 
 
-def dislike(request, slug, reply_pk):
-    reply = Reply.objects.get(pk=reply_pk)
+def dislike(request, slug, reply_pk=None):
+    if reply_pk:
+        model_obj = Reply.objects.get(pk=reply_pk)
+    else:
+        model_obj = Question.objects.get(slug=slug)
 
-    reply_type = ContentType.objects.get_for_model(reply)
+    model_obj_type = ContentType.objects.get_for_model(model_obj)
 
     Vote.objects.filter(
-        content_type=reply_type,
-        object_id=reply.id,
+        content_type=model_obj_type,
+        object_id=model_obj.id,
         user=request.user
     ).delete()
     return redirect('question_detail', slug=slug)
 
 
-def add_medal(request, slug, reply_pk):
-    reply = Reply.objects.get(pk=reply_pk)
-    if reply.flag:
-        reply.flag = False
-    else:
-        reply.flag = True
-    reply.save()
-    return redirect('question_detail', slug=slug)
+def add_medal(request, *args, **kwargs):
+    if not request.is_ajax():
+        return HttpResponse('It is not an ajax!')
+
+    pk = request.GET.get('reply_pk')
+    reply = Reply.objects.get(pk=int(pk))
+
+    if request.user.username == reply.related_q.author.username:
+        reply.flag = not reply.flag
+        reply.save()
+        return JsonResponse({'flag': reply.flag})
+
 
 
 class ReplyCreate(FormView):
