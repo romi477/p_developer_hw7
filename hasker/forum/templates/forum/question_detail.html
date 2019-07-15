@@ -4,64 +4,6 @@
 
 {% block content %}
 
-<script>
-  $(document).ready(function() {
-    $("button").click(function () {
-      var id = $(this).attr("id");
-      var medal_id = "#medal_" + id;
-
-        $.ajax({
-            url: id + "/medal/",
-            data: {},
-            dataType: "json",
-            success: function(data) {
-              if (data.flag == true) {
-                $(medal_id).html('<img src="{{ MEDIA_URL }}png/starfull.png" hspace="700">');
-              }
-              else if (data.flag == false) {
-                $(medal_id).text("");
-              }
-            },
-            error: function(data) {
-              console.log(data);
-              alert("status code: " + data.status)
-            }
-        });
-    });
-  });
-</script>
-
-<script>
-
-$(document).ready(function() {
-        function ajax_setup(e){
-            e.preventDefault();
-            var href = $(this).attr("href");
-            $.ajax({
-              url: href,
-              data: {},
-              dataType: "json",
-              success: function(data) {
-                if (data.id) {
-                  var id = "#rat_r_" + data.id;
-                }
-                else {
-                  var id = "#rat_q";
-                }
-                $(id).text(data.rating);
-              },
-              error: function(data) {
-                console.log(data);
-              }
-            });
-        }
-   $(".evaluate-score").click(ajax_setup);
-})
-
-
-
-</script>
-
     <h3 style="text-align: center; color: MediumSeaGreen; margin-top: 16px;">{{ question.title }}</h3>
 
         <div class="card">
@@ -97,7 +39,7 @@ $(document).ready(function() {
 
                     <h6 class="card-subtitle mb-2 text-muted">
                         <a style="color: Gray" href="{% url 'person_info' nickname=reply.author.username %}">
-                            {{ reply.author.username }}</a>: {{ reply.pub_date }} id: {{ reply.id }}
+                            {{ reply.author.username }}</a>: {{ reply.pub_date }}
                         {% if reply.flag %}
                             <span id="medal_{{ reply.id }}">
                                 <img src="{{ MEDIA_URL }}png/starfull.png" hspace="700">
@@ -111,10 +53,10 @@ $(document).ready(function() {
                     rating: <b id="rat_r_{{ reply.id }}">{{ reply.total_votes }}</b>
                     {% if request.user.is_authenticated %}
                         <p>
-                        <a id="like_{{ reply.id }}" href="{% url 'reply_like' slug=question.slug reply_pk=reply.id %}" class="card-link text-info evaluate-score">like</a>
+                        <a href="{% url 'reply_like' slug=question.slug reply_pk=reply.id %}" class="card-link text-info evaluate-score">like</a>
                         <a href="{% url 'reply_dislike' slug=question.slug reply_pk=reply.id %}" class="card-link text-info evaluate-score">dislike</a>
                         {% if question.author == request.user %}
-                            <button id="{{ reply.id }}" type="button" class="btn btn-outline-secondary btn-sm" style="margin-left: 590px;">medal</button>
+                            <button id="{{ reply.id }}" type="button" class="btn btn-outline-secondary btn-sm add-medal" style="margin-left: 590px;">medal</button>
                         {% endif %}
                         </p>
                     {% endif %}
