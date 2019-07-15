@@ -1,12 +1,10 @@
 from django.db.models import Q
 from django.shortcuts import render
 from django.shortcuts import reverse
-from django.http import JsonResponse
-from django.http import HttpResponse
-from django.shortcuts import redirect
 from .forms import QuestionForm, ReplyForm
 from .models import Question, Tag, Reply, Vote
 from django.views.generic.edit import FormView
+from django.http import JsonResponse, HttpResponse
 from django.views.generic import ListView, DetailView
 from django.views.generic.list import MultipleObjectMixin
 from django.contrib.contenttypes.models import ContentType
@@ -68,6 +66,9 @@ class QuestionDetail(DetailView, MultipleObjectMixin):
 
 
 def like(request, slug, reply_pk=None):
+    if not request.is_ajax():
+        return HttpResponse('It is not an ajax request!')
+    
     if reply_pk:
         model_obj = Reply.objects.get(pk=reply_pk)
     else:
@@ -80,10 +81,15 @@ def like(request, slug, reply_pk=None):
         object_id=model_obj.id,
         user=request.user
     )
-    return redirect('question_detail', slug=slug)
+    model_obj.refresh_from_db()
+    
+    return JsonResponse({'id': reply_pk, 'rating': model_obj.total_votes})
 
 
 def dislike(request, slug, reply_pk=None):
+    if not request.is_ajax():
+        return HttpResponse('It is not an ajax request!')
+    
     if reply_pk:
         model_obj = Reply.objects.get(pk=reply_pk)
     else:
@@ -96,20 +102,21 @@ def dislike(request, slug, reply_pk=None):
         object_id=model_obj.id,
         user=request.user
     ).delete()
-    return redirect('question_detail', slug=slug)
+    model_obj.refresh_from_db()
+    return JsonResponse({'id': reply_pk, 'rating': model_obj.total_votes})
 
 
-def add_medal(request, *args, **kwargs):
+def add_medal(request, slug, reply_pk):
     if not request.is_ajax():
-        return HttpResponse('It is not an ajax!')
-
-    pk = request.GET.get('reply_pk')
-    reply = Reply.objects.get(pk=int(pk))
-
+        return HttpResponse('It is not an ajax request!')
+    
+    reply = Reply.objects.get(pk=reply_pk)
+    
     if request.user.username == reply.related_q.author.username:
         reply.flag = not reply.flag
         reply.save()
         return JsonResponse({'flag': reply.flag})
+    
 
 
 

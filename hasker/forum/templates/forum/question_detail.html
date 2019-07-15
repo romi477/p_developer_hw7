@@ -12,7 +12,7 @@
 
         $.ajax({
             url: id + "/medal/",
-            data: {"reply_pk": id},
+            data: {},
             dataType: "json",
             success: function(data) {
               if (data.flag == true) {
@@ -24,6 +24,7 @@
             },
             error: function(data) {
               console.log(data);
+              alert("status code: " + data.status)
             }
         });
     });
@@ -31,12 +32,32 @@
 </script>
 
 <script>
-    $(document).ready(function(){
-        $("a").click(function (){
-          var href = $(this).attr("href")
-          alert(href);
-        });
-    })
+
+$(document).ready(function() {
+        function ajax_setup(e){
+            e.preventDefault();
+            var href = $(this).attr("href");
+            $.ajax({
+              url: href,
+              data: {},
+              dataType: "json",
+              success: function(data) {
+                if (data.id) {
+                  var id = "#rat_r_" + data.id;
+                }
+                else {
+                  var id = "#rat_q";
+                }
+                $(id).text(data.rating);
+              },
+              error: function(data) {
+                console.log(data);
+              }
+            });
+        }
+   $(".evaluate-score").click(ajax_setup);
+})
+
 
 
 </script>
@@ -58,11 +79,11 @@
                     </span>
                     {% endfor %}
                 </p>
-                    rating: <b>{{ question.total_votes }}</b>
+                    rating: <b id="rat_q">{{ question.total_votes }}</b>
                     {% if request.user.is_authenticated %}
                         <p>
-                        <a href="{% url 'question_like' slug=question.slug %}" class="card-link text-info">like</a>
-                        <a href="{% url 'question_dislike' slug=question.slug %}" class="card-link text-info">dislike</a>
+                        <a href="{% url 'question_like' slug=question.slug %}" class="card-link text-info evaluate-score">like</a>
+                        <a href="{% url 'question_dislike' slug=question.slug %}" class="card-link text-info evaluate-score">dislike</a>
                         </p>
                     {% endif %}
             </div>
@@ -90,8 +111,8 @@
                     rating: <b id="rat_r_{{ reply.id }}">{{ reply.total_votes }}</b>
                     {% if request.user.is_authenticated %}
                         <p>
-                        <a id="like_{{ reply.id }}" href="{% url 'reply_like' slug=question.slug reply_pk=reply.id %}" class="card-link text-info">like</a>
-                        <a id="dislike_{{ reply.id }}" href="{% url 'reply_dislike' slug=question.slug reply_pk=reply.id %}" class="card-link text-info">dislike</a>
+                        <a id="like_{{ reply.id }}" href="{% url 'reply_like' slug=question.slug reply_pk=reply.id %}" class="card-link text-info evaluate-score">like</a>
+                        <a href="{% url 'reply_dislike' slug=question.slug reply_pk=reply.id %}" class="card-link text-info evaluate-score">dislike</a>
                         {% if question.author == request.user %}
                             <button id="{{ reply.id }}" type="button" class="btn btn-outline-secondary btn-sm" style="margin-left: 590px;">medal</button>
                         {% endif %}
@@ -114,8 +135,3 @@
         {% endif %}
 
 {% endblock %}
-
-
-
-
-
