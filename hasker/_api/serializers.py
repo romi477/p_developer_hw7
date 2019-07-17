@@ -7,7 +7,7 @@ class AuthorSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Person
-        fields = ['username', 'email', 'avatar', 'date_joined']
+        fields = ['username', 'email']
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -19,7 +19,9 @@ class QuestionSerializer(serializers.ModelSerializer):
         
         
 class ReplySerializer(serializers.ModelSerializer):
-    
+    author = AuthorSerializer(read_only=True)
+
     class Meta:
         model = Reply
         fields = ['id', 'related_q', 'body', 'author', 'pub_date']
+

@@ -23,9 +23,9 @@ class Tag(models.Model):
 
 
 class Question(models.Model):
-    title = models.CharField(max_length=144, db_index=True, unique=True)
+    title = models.CharField(max_length=255, db_index=True, unique=True)
     content = models.TextField()
-    slug = models.SlugField(max_length=72, unique=True)
+    slug = models.SlugField(max_length=144, unique=True)
     pub_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, blank=True, related_name='questions')
@@ -80,4 +80,3 @@ class Reply(models.Model):
     @property
     def total_votes(self):
         return self.votes.count()
-    

@@ -58,8 +58,8 @@ class QuestionDetail(DetailView, MultipleObjectMixin):
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
-        replyes = Reply.objects.filter(related_q__slug=self.kwargs['slug']).order_by('pub_date')
-        context = super(QuestionDetail, self).get_context_data(object_list=replyes, **kwargs)
+        replies = Reply.objects.filter(related_q__slug=self.kwargs['slug']).order_by('pub_date')
+        context = super(QuestionDetail, self).get_context_data(object_list=replies, **kwargs)
         if self.request.user.is_authenticated:
             context['reply_form'] = ReplyForm()
         return context
@@ -117,8 +117,6 @@ def add_medal(request, slug, reply_pk):
         reply.save()
         return JsonResponse({'flag': reply.flag})
     
-
-
 
 class ReplyCreate(FormView):
     form_class = ReplyForm

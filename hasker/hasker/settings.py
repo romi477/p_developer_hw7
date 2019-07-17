@@ -118,17 +118,13 @@ class Base(Configuration):
     ]
 
 
-class FullPageCaching():
-    USE_ETAGS = True
-
-
 class Local(Base):
     DEBUG = True
 
 
 class Prod(Base):
     DEBUG = False
-    ALLOWED_HOSTS = ['127.0.0.1']
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
     @property
     def DATABASES(self):
