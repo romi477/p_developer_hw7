@@ -1,11 +1,12 @@
 from rest_framework import serializers
-from django.apps import apps
+from forum.models import Question, Reply
+from authorization.models import Person
 
 
 class AuthorSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = apps.get_model('authorization', 'Person')
+        model = Person
         fields = ['username', 'email', 'avatar', 'date_joined']
 
 
@@ -13,12 +14,12 @@ class QuestionSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True)
     
     class Meta:
-        model = apps.get_model('forum', 'Question')
-        fields = ['title', 'content', 'author', 'pub_date']
+        model = Question
+        fields = ['id', 'title', 'content', 'author', 'pub_date']
         
         
 class ReplySerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = apps.get_model('forum', 'Reply')
-        fields = ['related_q', 'body', 'author', 'pub_date']
+        model = Reply
+        fields = ['id', 'related_q', 'body', 'author', 'pub_date']
