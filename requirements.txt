@@ -1,4 +1,4 @@
-Django==2.2.1
+Django==2.2.27
 django-configurations==2.1
 django-crispy-forms==1.7.2
 djangorestframework==3.10.0
